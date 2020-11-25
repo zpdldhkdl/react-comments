@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import Logo from "./components/Logo";
+import 'bootstrap/dist/css/bootstrap.css';
+import CommentForm from "./components/commentForm/CommentForm";
 
-function App() {
+export default function App() {
+    const [isLoading, setIsLoading] = useState('true');
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+      <div>
+        <Logo/>
+        <div className='row'>
+          <div className='col-4 pt-3 pl-5 border-right'>
+              <h6> React에 대한 댓글을 작성해주세요. </h6>
+              <CommentForm />
+          </div>
 
-export default App;
+            <div className='col-8 pt-3'>
+                <h4>
+                    Comments
+                </h4>
+                
+            </div>
+        </div>
+      </div>
+  );
+};
