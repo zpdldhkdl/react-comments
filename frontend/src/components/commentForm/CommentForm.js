@@ -1,31 +1,32 @@
 import React, {useState} from 'react';
 import {InputGroup, FormControl, Button, Alert} from "react-bootstrap";
 
-export default function CommentForm() {
+export default function CommentForm({ addComment }) {
     const [nickname, setNickname] = useState('');
-    const [comment, setComment] = useState('');
+    const [article, setArticle] = useState('');
     const [isError, setIsError] = useState(false);
 
     const changeNickname = (e) => {
         setNickname(e.target.value);
     };
 
-    const changeComment = (e) => {
-        setComment(e.target.value);
+    const changeArticle = (e) => {
+        setArticle(e.target.value);
     };
 
     const onSubmit = () => {
         const check = checkFormText();
 
         if(check) {
-            //todo: post to server
+            addComment(nickname, article);
+            return;
         }
 
         setIsError(true);
     };
 
     const checkFormText = () => {
-        if (nickname !== '' && comment !== '')
+        if (nickname !== '' && article !== '')
             return true;
 
         return false;
@@ -59,7 +60,7 @@ export default function CommentForm() {
             <InputGroup className='mb-3'>
                 <FormControl
                     as='textarea'
-                    onChange={changeComment}
+                    onChange={changeArticle}
                 />
             </InputGroup>
             {isError ? onErrorMessage() : null}
