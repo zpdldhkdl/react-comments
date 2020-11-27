@@ -13,3 +13,17 @@ exports.getComments = async(ctx) => {
     ctx.type = HttpContentType.JSON;
     ctx.body = comments;
 };
+
+exports.postComment = async(ctx) => {
+  const { nickname, article } = ctx.query;
+
+  const ret = await db.comments.create({
+    nickname: nickname,
+    article: article,
+  });
+
+  if(!ret.dataValues)
+    ctx.status = HttpStatusCode.BAD_REQUEST;
+
+  ctx.status = HttpStatusCode.OK;
+}
