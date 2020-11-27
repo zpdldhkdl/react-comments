@@ -11,11 +11,12 @@ export default function CommentList({ comments }) {
                 </Alert>
             ) : null}
             {
-                comments.map((comment, idx) =>
+                comments.map((comment) =>
                     <Comment
                         nickname={comment.nickname}
                         article={comment.article}
-                        key={idx}
+                        time={comment.time}
+                        key={comment.id}
                     />
                 )
             }
