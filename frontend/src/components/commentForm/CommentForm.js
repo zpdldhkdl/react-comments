@@ -1,10 +1,17 @@
 import React, {useState} from 'react';
 import {InputGroup, FormControl, Button, Alert} from "react-bootstrap";
+import {
+    ERROR_MESSAGE,
+    ADD_COMMENT_ERROR_MESSAGE,
+    ADD_COMMENT_SUCCESS_MESSAGE
+} from './message';
 
-export default function CommentForm({ addComment }) {
+export default function CommentForm({ addComment, getComment }) {
     const [nickname, setNickname] = useState('');
     const [article, setArticle] = useState('');
     const [isError, setIsError] = useState(false);
+    const [isAddCommentError, setIsAddCommentError] = useState(false);
+    const [isAddCommentSuccess, setIsAddCommentSuccess] = useState(false);
 
     const changeNickname = (e) => {
         setNickname(e.target.value);
@@ -14,15 +21,29 @@ export default function CommentForm({ addComment }) {
         setArticle(e.target.value);
     };
 
-    const onSubmit = () => {
+    const resetFormContent = () => {
+        setNickname('');
+        setArticle('');
+    }
+
+    const onSubmit = async () => {
         const check = checkFormText();
 
-        if(check) {
-            addComment(nickname, article);
+        if(!check) {
+            setIsError(true);
             return;
         }
 
-        setIsError(true);
+        const returnAddComment = await addComment(nickname, article);
+
+        if(!returnAddComment) {
+            setIsAddCommentError(true);
+            return;
+        }
+
+        resetFormContent();
+        setIsAddCommentSuccess(true);
+        getComment();
     };
 
     const checkFormText = () => {
@@ -32,19 +53,30 @@ export default function CommentForm({ addComment }) {
         return false;
     };
 
-    const onErrorMessage = () => {
-        onErrorTimeOut();
+    const onErrorMessage = (message, setFunc) => {
+        onTimeOut(setFunc);
         return (
             <div>
                 <Alert variant='danger'>
-                    닉네임, 댓글은 비워둘 수 없습니다.
+                    {message}
                 </Alert>
             </div>
-        )
+        );
     };
 
-    const onErrorTimeOut = () => {
-        setTimeout(() => setIsError(false), 3000);
+    const onSuccessMessage = (message, setFunc) => {
+        onTimeOut(setFunc);
+        return (
+            <div>
+                <Alert variant='success'>
+                    {message}
+                </Alert>
+            </div>
+        );
+    };
+
+    const onTimeOut = (setFunc) => {
+        setTimeout(() => setFunc(false), 3000);
     };
 
     return (
@@ -55,15 +87,19 @@ export default function CommentForm({ addComment }) {
                     aria-label="Nickname"
                     aria-describedby="Nickname"
                     onChange={changeNickname}
+                    value={nickname}
                 />
             </InputGroup>
             <InputGroup className='mb-3'>
                 <FormControl
                     as='textarea'
                     onChange={changeArticle}
+                    value={article}
                 />
             </InputGroup>
-            {isError ? onErrorMessage() : null}
+            {isError ? onErrorMessage(ERROR_MESSAGE, setIsError) : null}
+            {isAddCommentError ? onErrorMessage(ADD_COMMENT_ERROR_MESSAGE, setIsAddCommentError) : null}
+            {isAddCommentSuccess ? onSuccessMessage(ADD_COMMENT_SUCCESS_MESSAGE, setIsAddCommentSuccess) : null}
             <Button className='w-25' onClick={onSubmit}>
                 입력 &#10148;
             </Button>
