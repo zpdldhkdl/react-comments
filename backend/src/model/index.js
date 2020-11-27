@@ -12,7 +12,7 @@ let sequelize = new Sequelize({
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.comment = require('./schema/comment.schema')(sequelize, Sequelize);
+db.comments = require('./schema/comment.schema')(sequelize, Sequelize);
 
 module.exports = db;
 
